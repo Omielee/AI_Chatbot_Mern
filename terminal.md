@@ -24,3 +24,6 @@ user:
     - email
     - password
     - chats:Chat[]
+
+6. Middleware
+Middleware are functions which gets exected before a request is processed. In Node and Express, middleware can be used to check JSON Body Validations, Tokens or Cookies Validations, Params Validations and more according to requirements.
