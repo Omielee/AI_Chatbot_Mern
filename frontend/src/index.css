@@ -4,7 +4,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #145508;
+  background: #030431;
   color: white;
   font-family: "Robot Slab", serif;
 }
@@ -12,3 +12,19 @@ body {
 /* .image-inverted{
 filter: invert(100%);
 } */
+
+.nav-Link{
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-right: 10px;
+  margin-left: 10px;
+  padding: 8px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.MuiOutlinedInput-input-root.Mui-focusd,
+.MuiOutlinedInput-notchedOutline {
+  border-color: white !important;
+}
