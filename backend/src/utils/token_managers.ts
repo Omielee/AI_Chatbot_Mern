@@ -1,11 +1,12 @@
-import { rejects } from "assert";
-import exp from "constants";
-import { NextFunction, response } from "express";
+
+import { NextFunction} from "express";
 import { param } from "express-validator";
 import jwt from "jsonwebtoken";
 import { resolve } from "path";
 import { Request,Response } from "express";
-export const createToken = (id: String, email: String, expiresIn) => {
+import { COOKIE_NAME } from "./constants.js";
+
+export const createToken = (id: String, email: String, expiresIn:string) => {
     const payload = { id, email };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn,
@@ -18,7 +19,7 @@ export const verifyToken = async (
     res:Response,
     next:NextFunction
     ) => {
-        const token = req.signedCookies['${COOKIE_NAME']
+        const token = req.signedCookies[`${COOKIE_NAME}`];
         if (!token || token.trim()===""){
             return res.status(401).json({message:"Token not received"});
         }

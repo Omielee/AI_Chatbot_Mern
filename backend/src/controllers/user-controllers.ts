@@ -74,6 +74,7 @@ export const userLogin = async (
             return res.status(403).send("Incorrect Password");
         }
 
+        // create token and store cookie
         res.clearCookie(COOKIE_NAME,{
             httpOnly:true,
             domain:"localhost",
@@ -86,14 +87,16 @@ export const userLogin = async (
         const token = createToken(user.id.toString(), user.email, "7d");
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
-        res.cookie(COOKIE_NAME, token, { path: "/", domain: "localhost", expires, httpOnly: true, signed: true, });
+        res.cookie(COOKIE_NAME, token, { 
+            path: "/", domain: "localhost", expires, httpOnly: true, signed: true, });
 
-        return res.status(200).json({ message: "login successfully", name:user.name, email:user.email});
+        return res
+            .status(200)
+            .json({ message: "login successfully", name:user.name, email:user.email});
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "error", cause: error.message });
     }
-
 }
 
 export const verifyUser = async (
@@ -103,19 +106,50 @@ export const verifyUser = async (
 ) => {
     try {
         // user token check
-        const user = await User.findById(res.locals.jwtData.email);
+        const user = await User.findById(res.locals.jwtData.id);
         if (!user) {
             return res.status(401).send("User not registered or token malfunctioned");
         }
-        console.log(user._id.toString(),res.locals.jwtData.id);
         if (user._id.toString() !== res.locals.jwtData.id){
             return res.status(401).send("Permission didn't match");
         }
-
-        return res.status(200).json({ message: "login successfully", name:user.name, email:user.email});
+        return res
+            .status(200)
+            .json({ message: "login successfully", name:user.name, email:user.email});
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "error", cause: error.message });
     }
+}
 
+export const userLogout = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        // user token check
+        const user = await User.findById(res.locals.jwtData.id);
+        if (!user) {
+            return res.status(401).send("User not registered or token malfunctioned");
+        }
+        if (user._id.toString() !== res.locals.jwtData.id){
+            return res.status(401).send("Permission didn't match");
+        }
+
+        //create token and store cookie
+        res.clearCookie(COOKIE_NAME,{
+            httpOnly:true,
+            domain:"localhost",
+            signed:true,
+            path:"/",
+        });
+
+        return res
+            .status(200)
+            .json({ message: "logout successfully", name:user.name, email:user.email});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "error", cause: error.message });
+    }
 }
